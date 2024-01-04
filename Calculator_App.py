@@ -56,6 +56,7 @@ entry = tk.Entry(frame1,textvariable = texte_variable,width=20,bd=5,justify='rig
 frame = tk.Frame(fen,bg='light yellow')
 
 frame2 = tk.Frame(fen,bg='light yellow',width = 200 , height = 200)
+
 # Bouton de la premiere page
 text_button= ['SHIFT','ALPHA','DEG','MORE','2nd',
               'π','','<--','-->','',
@@ -77,6 +78,7 @@ text_button2 = ['SHIFT','ALPHA','x','y','1st',
               '4','5','6','∑','∏',
               '1','2','3','∛','dy/dx',
               '0','.','Exp','Ans','=']
+
 buttons =[None for _ in range(len(text_button))]
 buttons2 =[None for _ in range(len(text_button2))]     
 
@@ -86,6 +88,7 @@ tk.Label(fen,text=' \n' ).grid(row=1,column=0,columnspan=5)
 frame.grid(row=2,column=0, columnspan=5)
 row ,column = 2,0
 result = None
+
 #creation des boutons
 for i,text in enumerate(text_button):
     buttons[i]=tk.Button(frame,text = text, bg = 'dark grey',fg='navy',width=5,bd=1,command = lambda m = text : action(m))
@@ -104,7 +107,9 @@ for i,text in enumerate(text_button):
     if not  column % 5:
         row += 1
         column = 0
+        
 row ,column = 2,0
+
 for i,text in enumerate(text_button2):
     buttons2[i]=tk.Button(frame2,text = text, bg = 'dark grey',fg='navy',width=5,bd=1,command = lambda m = text : action(m))
     buttons2[i].grid(row = row,column=column,padx =5,pady =10)
@@ -122,5 +127,6 @@ for i,text in enumerate(text_button2):
     if not  column % 5:
         row += 1
         column = 0
+        
 #Mise à jour de la fenetre
 fen.mainloop()
