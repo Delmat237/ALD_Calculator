@@ -19,7 +19,7 @@ def action(text_button):
                        
     elif text_button == 'CE':
         texte_variable.set('')
-    elif text_button == '2nd':
+    elif text_button == '-->':
         frame.config(bg='black')
     elif text_button == 'DEL':
         if texte_variable.get() == 'Math Error':
@@ -35,8 +35,12 @@ def action(text_button):
         entry.icursor(len(str(texte_variable))-1)
     elif text_button == 'x²':
         texte_variable.set(texte_variable.get()+'²')
-    elif text_button == '-->':
-        pass
+    elif text_button == '2nd':
+        frame.grid_forget()
+        frame2.grid(row = 2 ,column = 0)
+    elif text_button == '1st':
+        frame2.grid_forget()
+        frame.grid(row = 2 ,column = 0)
     else :
         texte_variable.set(texte_variable.get()+text_button)
     
@@ -51,6 +55,8 @@ entry = tk.Entry(frame1,textvariable = texte_variable,width=20,bd=5,justify='rig
 
 frame = tk.Frame(fen,bg='light yellow')
 
+frame2 = tk.Frame(fen,bg='light yellow',width = 200 , height = 200)
+# Bouton de la premiere page
 text_button= ['SHIFT','ALPHA','DEG','MORE','2nd',
               'π','','<--','-->','',
               'd/dx','%','x²','Log','ln',
@@ -60,7 +66,19 @@ text_button= ['SHIFT','ALPHA','DEG','MORE','2nd',
               '4','5','6','*','/',
               '1','2','3','+','-',
               '0','.','Exp','Ans','=']
-buttons =[None for _ in range(len(text_button))]     
+
+#bouton de la deuxieme page contenant le calcul matriciel et l'analyse numerique
+text_button2 = ['SHIFT','ALPHA','x','y','1st',
+              'Factor','and','or','xor','Not',
+              'd/dx','∫','Det','Cross','Tr',
+              'r','s','t','u','v',
+              '{}','〖[]〗','lim┬','(',')',
+              '7','8','9','False','True',
+              '4','5','6','∑','∏',
+              '1','2','3','∛','dy/dx',
+              '0','.','Exp','Ans','=']
+buttons =[None for _ in range(len(text_button))]
+buttons2 =[None for _ in range(len(text_button2))]     
 
 frame1.grid(row=0,column=0,columnspan=5)
 entry.grid(row=0,column=0,columnspan=5)
@@ -70,8 +88,7 @@ row ,column = 2,0
 result = None
 #creation des boutons
 for i,text in enumerate(text_button):
-    
-    buttons[i]=tk.Button(frame,text = text, bg = 'dark grey',fg='navy',width=3,bd=1,command = lambda m = text : action(m))
+    buttons[i]=tk.Button(frame,text = text, bg = 'dark grey',fg='navy',width=5,bd=1,command = lambda m = text : action(m))
     if text == 'SHIFT':
         buttons[i].config(bg='yellow')
     elif text == 'ALPHA':
@@ -87,6 +104,23 @@ for i,text in enumerate(text_button):
     if not  column % 5:
         row += 1
         column = 0
-
+row ,column = 2,0
+for i,text in enumerate(text_button2):
+    buttons2[i]=tk.Button(frame2,text = text, bg = 'dark grey',fg='navy',width=5,bd=1,command = lambda m = text : action(m))
+    buttons2[i].grid(row = row,column=column,padx =5,pady =10)
+    if text == 'SHIFT':
+            buttons2[i].config(bg='yellow')
+    elif text == 'ALPHA':
+        buttons2[i].config(bg='green',fg="white")
+    elif text == 'True'or text == 'False':
+        buttons2[i].config(bg='royal blue',fg="white")
+    elif text == 'CE' or text == 'Not':
+        buttons2[i].config(bg='orange')
+    elif text == '*' or text == '/' or text == '+' or text == '-':
+        buttons2[i].config(bg='pink',fg="black")
+    column += 1
+    if not  column % 5:
+        row += 1
+        column = 0
 #Mise à jour de la fenetre
 fen.mainloop()
