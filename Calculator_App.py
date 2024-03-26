@@ -1,35 +1,86 @@
 #Importation des modules
 import tkinter as tk
-from math import sin,cos,tan,sqrt,fabs,log,factorial,pi,log10,sinh,cosh,tanh
+from math import sin,cos,tan,sqrt,fabs,log,factorial,pi,log10,sinh,cosh,tanh,degrees,radians
 
 #Definitions des fonctions 
-def index(terme, expression):
+def index(terme : str, expression :str):
+    """Fonction permettant de rechercher et renvoyer toutes les indices de "terme"
+    dans "expression"
+    Args:
+        terme (str): expression à rechercher
+        expression (str): expression dans la quelle on recherche
+
+    Returns:
+        list: liste des indices
+    """
     indices = []
     indice = expression.find(terme)
 
-    while indice != -1:
+    while indice != -1: #En effef str.find(str) renvoie -1 lorsque le terme recherche n'est pas present
         indices.append(indice)
         indice= expression.find(terme, indice + 1)
- 
     return indices
 
 
 def evaluate(expression : str):
-    #Fonction permettant d'evaluer les expresions du champ d'entré
-    for car in ['√','sin','cos','tan','ln','Log','sh','ch','facto']:
+    """Fonction permettant d'evaluer les expresions du champ d'entré
+    evaluer ici c'est analyser l'expression en mettant la multiplication entre les expressions que
+    l'utilisateur n'a pas mis et en convertissant les angles 
+
+    Args:
+        expression (str): contenu du champ d'entree
+
+    Returns:
+        str: expression evaluée
+    """
+    for car in ['√','sin','cos','tan','ln','Log','sh','ch','facto','Ans']:
         if car in expression: #verifie si le car est dans l'expression
             indices,i = index(car,expression),0 #si c'est le cas , on cherche toutes les positions
             for p in indices:
-                if expression[p-1]  in ['*','+','-','/','(',')'] or  p == 0:
-                    continue
-                else :
+                #Insertion des multiplications
+                if expression[p-1]  not in ['*','+','-','/','(',')'] :
                     expression = expression[:p+i] +'*' + expression[p+i:]
                     i += 1
+                #convertion d'angles
+                if car in ['sin','cos','tan','sh','ch']:
+                    ind_par_fer = expression.find(")", p+len(car)+1 ) #indide de la parentheses fermante 
+                    angle = expression[p+len(car)+1:ind_par_fer] # recuperation de l'angle
+                    # convertion de expression en liste
+                    l_exp = list(expression)
+                    l_exp[p+len(car)+1:ind_par_fer] = list(str(Convert_angle(float(eval(angle.replace('π',"pi")))))) #convertion de l'angle
+                    
+                    #reconvertion de expression en string
+                    expression = "".join(l_exp)
+                             
     return expression
-           
+
+def Convert_angle(angle : float ):
+    """Fonction permettant d'effectuer la convertion des angles en (deg,rad ou grad)
+
+    Args:
+       angle(float): angle à convertir
+       choix_DEG.get()(int): 0 = deg, 1 = rad,2 = grad
+
+    Returns:
+        float: angle converti
+        
+    Notes:
+    1 deg = pi/180 rad , 1 rad = 63.662 grades 
+    """
+    if choix_DEG.get() == 0:
+        return radians(angle)
+    else:
+        return angle
+    
 def action(text_button):
-    global result,cursor,choix_DEG
+    """Fonction associant les commandes aux touches
+
+    Args:
+        text_button (str): la valeur du boutton concernée
+    """
     #association des fonctions aux boutons
+    global result,cursor,choix_DEG
+    
     if text_button == '=':
         if texte_variable.get() == 'Ans':
             
@@ -45,8 +96,10 @@ def action(text_button):
                 
             except ZeroDivisionError:
                 texte_variable.set("Infinity")
+                
             except ValueError:
-                texte_variable.set("Value Error")
+                texte_variable.set("Math Error")
+                
             except :
                 texte_variable.set("Syntax Error")
                        
@@ -57,7 +110,7 @@ def action(text_button):
         frame.config(bg='black')
         
     elif text_button == 'DEL':
-        if 'Math Error' in texte_variable.get():
+        if 'Math Error' in texte_variable.get() or  'Infinity' in texte_variable.get() or  'Syntax Error' in texte_variable.get():
             texte_variable.set('')
         else :
             texte_variable.set(texte_variable.get()[:-1])
@@ -112,8 +165,7 @@ fen = tk.Tk()
 fen.title('ALD Calculator')
 
 texte_variable = tk.StringVar()
-frame1=tk.Frame(fen,bg='navy')
-entry = tk.Entry(frame1,textvariable = texte_variable,width=20,bd=5,justify='right',font = 'Arial 14 bold')
+entry = tk.Entry(fen,textvariable = texte_variable,width=20,bd=5,justify='right',font = 'Arial 14 bold')
 
 frame = tk.Frame(fen,bg='light yellow')
 
@@ -121,7 +173,7 @@ frame2 = tk.Frame(fen,bg='light yellow',width = frame.winfo_width() , height = f
 
 # Bouton de la premiere page
 text_button= ['SHIFT','ALPHA','DEG','MORE','2nd',
-              'π','','<--','-->','',
+              'π','','<--','-->','x^(-1)',
               'd/dx','%','x²','Log','ln',
               'hyp','°','sin','cos','tan',
               'facto','Abs','√','(',')',
@@ -144,7 +196,6 @@ text_button2 = ['SHIFT','ALPHA','x','y','1st',
 buttons =[None for _ in range(len(text_button))]
 buttons2 =[None for _ in range(len(text_button2))]     
 
-frame1.grid(row=0,column=0,columnspan=5)
 entry.grid(row=0,column=0,columnspan=5)
 tk.Label(fen,text=' \n' ).grid(row=1,column=0,columnspan=5)
 frame.grid(row=2,column=0, columnspan=5)
@@ -155,7 +206,7 @@ cursor = tk.END
 #Creation des radiobuttons pour les touches hyp et DEG
 choix_DEG = tk.IntVar()
 for i,text in enumerate(['D','r','G']):
-    DEG_button = tk.Radiobutton(fen,text =text ,value = i , variable  = choix_DEG)      
+    DEG_button = tk.Radiobutton(fen,text =text ,value = i , variable  = choix_DEG )      
     DEG_button.grid(row = 1, column =i)
     
 hyp_value = tk.IntVar()
@@ -213,7 +264,6 @@ for i,text in enumerate(text_button2):
     if not  column % 5:
         row += 1
         column = 0
-
 
 #Mise à jour de la fenetre
 fen.mainloop()
