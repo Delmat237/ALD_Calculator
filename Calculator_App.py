@@ -72,7 +72,7 @@ def Convert_angle(angle : float ):
     else:
         return angle
     
-def action(text_button):
+def action(text_button,event = None):
     """Fonction associant les commandes aux touches
 
     Args:
@@ -265,5 +265,6 @@ for i,text in enumerate(text_button2):
         row += 1
         column = 0
 
+#Gestion des evenements
 #Mise à jour de la fenetre
 fen.mainloop()
