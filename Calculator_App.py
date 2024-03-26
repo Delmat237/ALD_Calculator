@@ -25,7 +25,7 @@ def index(terme : str, expression :str):
 def evaluate(expression : str):
     """Fonction permettant d'evaluer les expresions du champ d'entré
     evaluer ici c'est analyser l'expression en mettant la multiplication entre les expressions que
-    l'utilisateur n'a pas mis et en convertissant les angles 
+    l'utilisateur n'a pas mis et en convertissant les angles de degre en radian et vice versa
 
     Args:
         expression (str): contenu du champ d'entree
@@ -266,5 +266,6 @@ for i,text in enumerate(text_button2):
         column = 0
 
 #Gestion des evenements
+
 #Mise à jour de la fenetre
 fen.mainloop()
